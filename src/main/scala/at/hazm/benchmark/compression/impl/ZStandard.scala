@@ -1,10 +1,11 @@
-package at.hazm.benchmark.compression
+package at.hazm.benchmark.compression.impl
 
 import java.io.{InputStream, OutputStream}
 
+import at.hazm.benchmark.compression.Compressor
 import com.github.luben.zstd.{Zstd, ZstdInputStream, ZstdOutputStream}
 
-case class ZStandard(level:Int) extends Compressor.Buffer with Compressor.Stream[ZstdOutputStream] {
+case class ZStandard(level:Int) extends Compressor.Block with Compressor.Stream[ZstdOutputStream] {
   val id:String = s"com.github.luben:zstd-jni (level=$level)"
   override val version:String = "1.3.3-4"
 

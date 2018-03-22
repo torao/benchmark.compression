@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+  <comment>コメント</comment>
+  <entry key="product">DELL OptiPlex 7050</entry>
+  <entry key="platform">Windows 10 Pro</entry>
+  <entry key="processor">Intel™ Core™ i7-7700 @ 3.60GHz</entry>
+  <entry key="memory">16.0GB</entry>
+  <entry key="description"/>
+</properties>

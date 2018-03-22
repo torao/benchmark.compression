@@ -1,8 +1,10 @@
-package at.hazm.benchmark.compression
+package at.hazm.benchmark.compression.impl
 
 import java.io.{InputStream, OutputStream}
 
-object NOOP extends Compressor.Buffer with Compressor.Stream[OutputStream] {
+import at.hazm.benchmark.compression.Compressor
+
+object NOOP extends Compressor.Block with Compressor.Stream[OutputStream] {
   val id:String = "java:*uncompress*"
 
   override def compress(uncompressed:Array[Byte], compressed:Array[Byte]):Int = {

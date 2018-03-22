@@ -12,12 +12,26 @@ sealed trait Compressor {
 
 object Compressor {
 
-  trait Buffer extends Compressor {
+  /**
+    * Block compressor can compress/decompress on buffered memory data.
+    */
+  trait Block extends Compressor {
+
+    /**
+      * Compress specified buffered memory data to other.
+      *
+      * @param uncompressed input buffer
+      * @param compressed   output buffer
+      * @return length actually written in `compressed`
+      */
     def compress(uncompressed:Array[Byte], compressed:Array[Byte]):Int
 
     def decompress(compressed:Array[Byte], length:Int, uncompressed:Array[Byte]):Int
   }
 
+  /**
+    * Stream compressor supply streaming compression/decompression by InputStream and OutputStream.
+    */
   trait Stream[O <: OutputStream] extends Compressor {
     def compress(uncompressed:Array[Byte], out:OutputStream):Unit = {
       val os = init(out, uncompressed.length)

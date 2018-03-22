@@ -1,188 +1,188 @@
 # JavaVM Compression Libraries Benchmark & Comparison
 
-2018/03/22 2:06:36
-Takami Torao @ graphite
-Java HotSpot(TM) 64-Bit Server VM Oracle Corporation 25.161-b12
+<div><small><b>Date</b>: 2018/03/22 18:01:12, <b>Author</b>: t_takami @ OKW-721, <b>JavaVM</b>: Java HotSpot(TM) 64-Bit Server VM Oracle Corporation 25.162-b12, <b>Machine Model</b>: DELL OptiPlex 7050, <b>Operating System</b>: Windows 10 Pro, <b>CPU</b>: Intel™ Core™ i7-7700 @ 3.60GHz, <b>Memory</b>: 16.0GB </small></div>
 
-## Zero-filled `Byte[104857600]` Array
+## Zero-filled `Byte[10,485,760]` Array
 
-datasize=100MB, entropy=0.000
+<div><small><b>Block Size</b>: 10.0MB, <b>Block Entropy</b>: 0.0004, <b>Filled By</b>: <code>0</code>, <b>Sample Bytes</b>: <small>00 00 00 00 00 00 00 00 00 00 00 00 00 00 00...</small> </small></div>
 
-| Name | Version | Method | Rate | Compress [MB/sec] | Decompress [MB/sec] | ERR |
-|:-----|:--------|:-------|-----:|------------------:|--------------------:|:----|
-| java:*uncompress* | Java 1.8.0_161 | buffer | 0.0% | 6,200.7 | 7,950.5 | ✔ |
-| java:*uncompress* | Java 1.8.0_161 | stream | 0.0% | 7,600.0 | 4,177.5 |  |
-| org.xerial.snappy:snappy-java | 1.1.7.1 | buffer | 95.3% | 5,600.5 | 2,399.5 |  |
-| org.xerial.snappy:snappy-java | 1.1.7.1 | stream | 95.3% | 3,704.8 | 1,739.7 |  |
-| org.lz4:lz4-java | 1.4.1 | buffer | 99.6% | 7,534.0 | 387.1 |  |
-| org.lz4:lz4-java | 1.4.1 | stream | 99.6% | 2,543.1 | 336.7 |  |
-| com.github.luben:zstd-jni (level=1) | 1.3.3-4 | buffer | 99.991% | 9,021.9 | 4,858.1 |  |
-| com.github.luben:zstd-jni (level=1) | 1.3.3-4 | stream | 99.991% | 4,096.3 | 2,887.6 |  |
-| com.github.luben:zstd-jni (level=3) | 1.3.3-4 | buffer | 99.991% | 8,660.5 | 4,863.7 |  |
-| com.github.luben:zstd-jni (level=3) | 1.3.3-4 | stream | 99.991% | 5,518.4 | 2,882.2 |  |
-| com.github.luben:zstd-jni (level=6) | 1.3.3-4 | buffer | 99.992% | 1,703.4 | 5,431.3 |  |
-| com.github.luben:zstd-jni (level=6) | 1.3.3-4 | stream | 99.992% | 2,098.7 | 2,928.0 |  |
-| com.github.luben:zstd-jni (level=9) | 1.3.3-4 | buffer | 99.992% | 897.5 | 5,437.5 |  |
-| com.github.luben:zstd-jni (level=9) | 1.3.3-4 | stream | 99.992% | 1,371.8 | 2,906.8 |  |
-| com.github.luben:zstd-jni (level=16) | 1.3.3-4 | buffer | 99.992% | 2,398.6 | 5,466.3 |  |
-| com.github.luben:zstd-jni (level=16) | 1.3.3-4 | stream | 99.992% | 2,089.2 | 2,897.1 |  |
-| java:zlib | Java 1.8.0_161 | stream | 99.90% | 162.0 | 473.2 |  |
-| java:gzip | Java 1.8.0_161 | stream | 99.90% | 171.9 | 537.0 |  |
-| org.apache.commons:commons-compress (bzip2) | 1.16.1 | stream | 99.9999% | 80.4 | 178.7 |  |
+| Name | Version | Method | Rate | Compress <small>[MB/sec]</small> | Decompress <small>[MB/sec]</small> |     |
+|:-----|:--------|:-------|-----:|---------------------------------:|-----------------------------------:|:----|
+| java:*uncompress* | Java 1.8.0_162 | block | 0.0% | 8,537.0 | 8,362.3 | ✔ |
+| java:*uncompress* | Java 1.8.0_162 | stream | 0.0% | 8,440.2 | 5,891.8 | ✔ |
+| org.xerial.snappy:snappy-java | 1.1.7.1 | block | 95.3% | 6,633.0 | 2,804.7 | ✔ |
+| org.xerial.snappy:snappy-java | 1.1.7.1 | stream | 95.3% | 4,502.0 | 2,028.4 | ✔ |
+| org.lz4:lz4-java | 1.4.1 | block | 99.6% | 12,850.7 | 5,771.0 | ✔ |
+| org.lz4:lz4-java | 1.4.1 | stream | 99.6% | 3,770.6 | 2,320.5 | ✔ |
+| com.github.luben:zstd-jni (level=1) | 1.3.3-4 | block | 99.991% | 10,937.9 | 5,754.0 | ✔ |
+| com.github.luben:zstd-jni (level=1) | 1.3.3-4 | stream | 99.991% | 4,680.1 | 3,334.0 | ✔ |
+| com.github.luben:zstd-jni (level=3) | 1.3.3-4 | block | 99.991% | 8,465.0 | 5,803.4 | ✔ |
+| com.github.luben:zstd-jni (level=3) | 1.3.3-4 | stream | 99.991% | 5,536.4 | 2,917.7 | ✔ |
+| com.github.luben:zstd-jni (level=6) | 1.3.3-4 | block | 99.991% | 1,939.6 | 6,469.7 | ✔ |
+| com.github.luben:zstd-jni (level=6) | 1.3.3-4 | stream | 99.991% | 2,074.6 | 2,889.4 | ✔ |
+| com.github.luben:zstd-jni (level=9) | 1.3.3-4 | block | 99.991% | 1,058.8 | 6,453.4 | ✔ |
+| com.github.luben:zstd-jni (level=9) | 1.3.3-4 | stream | 99.991% | 1,324.1 | 2,907.7 | ✔ |
+| com.github.luben:zstd-jni (level=16) | 1.3.3-4 | block | 99.992% | 1,078.0 | 6,464.0 | ✔ |
+| com.github.luben:zstd-jni (level=16) | 1.3.3-4 | stream | 99.991% | 895.8 | 2,394.8 | ✔ |
+| java:zlib | Java 1.8.0_162 | stream | 99.90% | 199.9 | 568.2 | ✔ |
+| java:gzip | Java 1.8.0_162 | stream | 99.90% | 206.2 | 655.7 | ✔ |
+| org.apache.commons:commons-compress (bzip2) | 1.16.1 | stream | 99.9995% | 86.4 | 221.4 | ✔ |
 
-## Uniform Random filled `Byte[104857600]` Array
+## Uniform Random filled `Byte[10,485,760]` Array
 
-datasize=100MB, entropy=5.545
+<div><small><b>Block Size</b>: 10.0MB, <b>Block Entropy</b>: 5.545, <b>Filled By</b>: <code>random.nextByte()</code>, <b>Sample Bytes</b>: <small>22 A9 D8 EE 78 07 C8 EA 8E 79 45 D5 89 EF A4...</small> </small></div>
 
-| Name | Version | Method | Rate | Compress [MB/sec] | Decompress [MB/sec] | ERR |
-|:-----|:--------|:-------|-----:|------------------:|--------------------:|:----|
-| java:*uncompress* | Java 1.8.0_161 | buffer | 0.0% | 5,486.7 | 7,006.7 |  |
-| java:*uncompress* | Java 1.8.0_161 | stream | 0.0% | 7,216.4 | 5,006.0 |  |
-| org.xerial.snappy:snappy-java | 1.1.7.1 | buffer | -0.005% | 4,217.0 | 6,905.9 |  |
-| org.xerial.snappy:snappy-java | 1.1.7.1 | stream | -0.031% | 3,438.0 | 3,920.2 |  |
-| org.lz4:lz4-java | 1.4.1 | buffer | -0.392% | 4,576.8 | 5,992.8 |  |
-| org.lz4:lz4-java | 1.4.1 | stream | -0.032% | 1,496.4 | 1,966.1 |  |
-| com.github.luben:zstd-jni (level=1) | 1.3.3-4 | buffer | -0.002% | 1,120.9 | 6,842.5 |  |
-| com.github.luben:zstd-jni (level=1) | 1.3.3-4 | stream | -0.002% | 966.5 | 2,567.9 |  |
-| com.github.luben:zstd-jni (level=3) | 1.3.3-4 | buffer | -0.002% | 1,025.5 | 6,874.5 |  |
-| com.github.luben:zstd-jni (level=3) | 1.3.3-4 | stream | -0.002% | 872.2 | 2,454.1 |  |
-| com.github.luben:zstd-jni (level=6) | 1.3.3-4 | buffer | -0.002% | 211.6 | 6,873.1 |  |
-| com.github.luben:zstd-jni (level=6) | 1.3.3-4 | stream | -0.002% | 188.8 | 2,368.3 |  |
-| com.github.luben:zstd-jni (level=9) | 1.3.3-4 | buffer | -0.002% | 91.8 | 6,925.8 |  |
-| com.github.luben:zstd-jni (level=9) | 1.3.3-4 | stream | -0.002% | 85.5 | 2,481.6 |  |
-| com.github.luben:zstd-jni (level=16) | 1.3.3-4 | buffer | -0.002% | 6.5 | 6,984.4 |  |
-| com.github.luben:zstd-jni (level=16) | 1.3.3-4 | stream | -0.002% | 6.5 | 2,354.8 |  |
-| java:zlib | Java 1.8.0_161 | stream | -0.031% | 29.5 | 620.5 |  |
-| java:gzip | Java 1.8.0_161 | stream | -0.031% | 31.3 | 801.0 |  |
-| org.apache.commons:commons-compress (bzip2) | 1.16.1 | stream | -0.434% | 4.1 | 8.8 |  |
+| Name | Version | Method | Rate | Compress <small>[MB/sec]</small> | Decompress <small>[MB/sec]</small> |     |
+|:-----|:--------|:-------|-----:|---------------------------------:|-----------------------------------:|:----|
+| java:*uncompress* | Java 1.8.0_162 | block | 0.0% | 7,858.0 | 7,798.2 | ✔ |
+| java:*uncompress* | Java 1.8.0_162 | stream | 0.0% | 7,735.2 | 5,433.9 | ✔ |
+| org.xerial.snappy:snappy-java | 1.1.7.1 | block | -0.005% | 5,112.5 | 7,461.3 | ✔ |
+| org.xerial.snappy:snappy-java | 1.1.7.1 | stream | -0.03% | 4,163.6 | 4,627.1 | ✔ |
+| org.lz4:lz4-java | 1.4.1 | block | -0.4% | 6,841.6 | 11,166.9 | ✔ |
+| org.lz4:lz4-java | 1.4.1 | stream | -0.03% | 2,300.1 | 2,853.7 | ✔ |
+| com.github.luben:zstd-jni (level=1) | 1.3.3-4 | block | -0.002% | 1,454.1 | 7,394.3 | ✔ |
+| com.github.luben:zstd-jni (level=1) | 1.3.3-4 | stream | -0.002% | 1,288.6 | 3,201.4 | ✔ |
+| com.github.luben:zstd-jni (level=3) | 1.3.3-4 | block | -0.002% | 1,336.6 | 7,574.2 | ✔ |
+| com.github.luben:zstd-jni (level=3) | 1.3.3-4 | stream | -0.002% | 1,073.8 | 2,712.2 | ✔ |
+| com.github.luben:zstd-jni (level=6) | 1.3.3-4 | block | -0.002% | 297.7 | 7,942.2 | ✔ |
+| com.github.luben:zstd-jni (level=6) | 1.3.3-4 | stream | -0.002% | 297.3 | 2,570.2 | ✔ |
+| com.github.luben:zstd-jni (level=9) | 1.3.3-4 | block | -0.002% | 201.3 | 7,338.3 | ✔ |
+| com.github.luben:zstd-jni (level=9) | 1.3.3-4 | stream | -0.002% | 173.8 | 2,507.0 | ✔ |
+| com.github.luben:zstd-jni (level=16) | 1.3.3-4 | block | -0.002% | 8.9 | 7,680.2 | ✔ |
+| com.github.luben:zstd-jni (level=16) | 1.3.3-4 | stream | -0.002% | 8.9 | 2,186.1 | ✔ |
+| java:zlib | Java 1.8.0_162 | stream | -0.03% | 41.4 | 861.1 | ✔ |
+| java:gzip | Java 1.8.0_162 | stream | -0.03% | 41.7 | 972.1 | ✔ |
+| org.apache.commons:commons-compress (bzip2) | 1.16.1 | stream | -0.4% | 5.1 | 13.7 | ✔ |
 
-## Norm(μ=0,σ<sup>2</sup>=100) Random `Int[26214400]` Array
+## Norm(μ=0,σ<sup>2</sup>=100) Random `Int[2,621,440]` Array
 
-datasize=100MB, entropy=1.871
+<div><small><b>Block Size</b>: 10.0MB, <b>Block Entropy</b>: 1.871, <b>Filled By</b>: <code>μ + random.nextGaussian() × σ</code>, <b>Sample Bytes</b>: <small>FF FF FF F9 FF FF FF F5 FF FF FF EC FF FF FF...</small> </small></div>
 
-| Name | Version | Method | Rate | Compress [MB/sec] | Decompress [MB/sec] | ERR |
-|:-----|:--------|:-------|-----:|------------------:|--------------------:|:----|
-| java:*uncompress* | Java 1.8.0_161 | buffer | 0.0% | 7,194.2 | 7,195.0 |  |
-| java:*uncompress* | Java 1.8.0_161 | stream | 0.0% | 7,209.3 | 4,837.1 |  |
-| org.xerial.snappy:snappy-java | 1.1.7.1 | buffer | 51.3% | 308.7 | 783.7 |  |
-| org.xerial.snappy:snappy-java | 1.1.7.1 | stream | 51.2% | 286.1 | 647.6 |  |
-| org.lz4:lz4-java | 1.4.1 | buffer | 30.2% | 295.0 | 423.6 |  |
-| org.lz4:lz4-java | 1.4.1 | stream | 30.0% | 228.5 | 356.4 |  |
-| com.github.luben:zstd-jni (level=1) | 1.3.3-4 | buffer | 71.1% | 205.1 | 503.2 |  |
-| com.github.luben:zstd-jni (level=1) | 1.3.3-4 | stream | 71.1% | 190.9 | 437.0 |  |
-| com.github.luben:zstd-jni (level=3) | 1.3.3-4 | buffer | 72.7% | 161.5 | 514.5 |  |
-| com.github.luben:zstd-jni (level=3) | 1.3.3-4 | stream | 72.7% | 152.2 | 446.0 |  |
-| com.github.luben:zstd-jni (level=6) | 1.3.3-4 | buffer | 73.8% | 70.1 | 541.2 |  |
-| com.github.luben:zstd-jni (level=6) | 1.3.3-4 | stream | 73.8% | 64.7 | 469.7 |  |
-| com.github.luben:zstd-jni (level=9) | 1.3.3-4 | buffer | 74.1% | 39.1 | 571.0 |  |
-| com.github.luben:zstd-jni (level=9) | 1.3.3-4 | stream | 74.1% | 35.9 | 490.5 |  |
-| com.github.luben:zstd-jni (level=16) | 1.3.3-4 | buffer | 78.3% | 2.7 | 734.6 |  |
-| com.github.luben:zstd-jni (level=16) | 1.3.3-4 | stream | 78.3% | 2.7 | 623.0 |  |
-| java:zlib | Java 1.8.0_161 | stream | 73.3% | 7.2 | 258.9 |  |
-| java:gzip | Java 1.8.0_161 | stream | 73.3% | 7.2 | 272.3 |  |
-| org.apache.commons:commons-compress (bzip2) | 1.16.1 | stream | 81.9% | 5.1 | 15.9 |  |
+| Name | Version | Method | Rate | Compress <small>[MB/sec]</small> | Decompress <small>[MB/sec]</small> |     |
+|:-----|:--------|:-------|-----:|---------------------------------:|-----------------------------------:|:----|
+| java:*uncompress* | Java 1.8.0_162 | block | 0.0% | 8,388.0 | 8,775.1 | ✔ |
+| java:*uncompress* | Java 1.8.0_162 | stream | 0.0% | 9,233.1 | 5,872.4 | ✔ |
+| org.xerial.snappy:snappy-java | 1.1.7.1 | block | 51.3% | 387.4 | 1,003.7 | ✔ |
+| org.xerial.snappy:snappy-java | 1.1.7.1 | stream | 51.2% | 366.6 | 874.4 | ✔ |
+| org.lz4:lz4-java | 1.4.1 | block | 30.2% | 468.2 | 1,084.5 | ✔ |
+| org.lz4:lz4-java | 1.4.1 | stream | 30.1% | 415.7 | 812.4 | ✔ |
+| com.github.luben:zstd-jni (level=1) | 1.3.3-4 | block | 71.1% | 264.0 | 629.5 | ✔ |
+| com.github.luben:zstd-jni (level=1) | 1.3.3-4 | stream | 71.1% | 249.7 | 572.7 | ✔ |
+| com.github.luben:zstd-jni (level=3) | 1.3.3-4 | block | 72.7% | 202.6 | 632.7 | ✔ |
+| com.github.luben:zstd-jni (level=3) | 1.3.3-4 | stream | 72.7% | 192.2 | 577.5 | ✔ |
+| com.github.luben:zstd-jni (level=6) | 1.3.3-4 | block | 73.8% | 87.9 | 689.7 | ✔ |
+| com.github.luben:zstd-jni (level=6) | 1.3.3-4 | stream | 73.8% | 82.4 | 591.2 | ✔ |
+| com.github.luben:zstd-jni (level=9) | 1.3.3-4 | block | 74.1% | 47.6 | 719.6 | ✔ |
+| com.github.luben:zstd-jni (level=9) | 1.3.3-4 | stream | 74.1% | 45.1 | 626.6 | ✔ |
+| com.github.luben:zstd-jni (level=16) | 1.3.3-4 | block | 78.2% | 3.5 | 928.4 | ✔ |
+| com.github.luben:zstd-jni (level=16) | 1.3.3-4 | stream | 78.2% | 3.4 | 716.1 | ✔ |
+| java:zlib | Java 1.8.0_162 | stream | 73.3% | 8.8 | 325.4 | ✔ |
+| java:gzip | Java 1.8.0_162 | stream | 73.3% | 8.9 | 346.9 | ✔ |
+| org.apache.commons:commons-compress (bzip2) | 1.16.1 | stream | 81.9% | 6.3 | 29.0 | ✔ |
 
-## Norm(μ=0,σ<sup>2</sup>=1) Random `Double[13107200]` Array
+## Norm(μ=0,σ<sup>2</sup>=1) Random `Double[1,310,720]` Array
 
-datasize=100MB, entropy=5.284
+<div><small><b>Block Size</b>: 10.0MB, <b>Block Entropy</b>: 5.284, <b>Filled By</b>: <code>μ + random.nextGaussian() × σ</code>, <b>Sample Bytes</b>: <small>BF E7 C1 96 29 AB 48 65 BF F2 1A 9C 95 29 D6...</small> </small></div>
 
-| Name | Version | Method | Rate | Compress [MB/sec] | Decompress [MB/sec] | ERR |
-|:-----|:--------|:-------|-----:|------------------:|--------------------:|:----|
-| java:*uncompress* | Java 1.8.0_161 | buffer | 0.0% | 7,077.9 | 7,166.4 |  |
-| java:*uncompress* | Java 1.8.0_161 | stream | 0.0% | 7,167.8 | 4,947.0 |  |
-| org.xerial.snappy:snappy-java | 1.1.7.1 | buffer | -0.005% | 4,133.8 | 6,975.8 |  |
-| org.xerial.snappy:snappy-java | 1.1.7.1 | stream | -0.031% | 3,417.3 | 3,836.6 |  |
-| org.lz4:lz4-java | 1.4.1 | buffer | -0.392% | 4,673.9 | 5,960.5 |  |
-| org.lz4:lz4-java | 1.4.1 | stream | -0.032% | 1,740.8 | 2,374.1 |  |
-| com.github.luben:zstd-jni (level=1) | 1.3.3-4 | buffer | 4.16% | 489.5 | 558.1 |  |
-| com.github.luben:zstd-jni (level=1) | 1.3.3-4 | stream | 4.16% | 412.2 | 481.6 |  |
-| com.github.luben:zstd-jni (level=3) | 1.3.3-4 | buffer | 4.16% | 462.3 | 564.5 |  |
-| com.github.luben:zstd-jni (level=3) | 1.3.3-4 | stream | 4.16% | 427.4 | 485.3 |  |
-| com.github.luben:zstd-jni (level=6) | 1.3.3-4 | buffer | 4.16% | 181.6 | 556.2 |  |
-| com.github.luben:zstd-jni (level=6) | 1.3.3-4 | stream | 4.16% | 161.4 | 486.8 |  |
-| com.github.luben:zstd-jni (level=9) | 1.3.3-4 | buffer | 4.16% | 81.6 | 564.0 |  |
-| com.github.luben:zstd-jni (level=9) | 1.3.3-4 | stream | 4.16% | 75.8 | 474.3 |  |
-| com.github.luben:zstd-jni (level=16) | 1.3.3-4 | buffer | 4.15% | 6.2 | 561.1 |  |
-| com.github.luben:zstd-jni (level=16) | 1.3.3-4 | stream | 4.15% | 6.2 | 475.9 |  |
-| java:zlib | Java 1.8.0_161 | stream | 3.93% | 20.5 | 151.8 |  |
-| java:gzip | Java 1.8.0_161 | stream | 3.93% | 20.5 | 162.8 |  |
-| org.apache.commons:commons-compress (bzip2) | 1.16.1 | stream | 3.24% | 4.5 | 8.8 |  |
+| Name | Version | Method | Rate | Compress <small>[MB/sec]</small> | Decompress <small>[MB/sec]</small> |     |
+|:-----|:--------|:-------|-----:|---------------------------------:|-----------------------------------:|:----|
+| java:*uncompress* | Java 1.8.0_162 | block | 0.0% | 9,387.0 | 8,895.0 | ✔ |
+| java:*uncompress* | Java 1.8.0_162 | stream | 0.0% | 9,074.1 | 6,082.4 | ✔ |
+| org.xerial.snappy:snappy-java | 1.1.7.1 | block | -0.005% | 5,780.4 | 8,704.1 | ✔ |
+| org.xerial.snappy:snappy-java | 1.1.7.1 | stream | -0.03% | 4,299.7 | 4,910.0 | ✔ |
+| org.lz4:lz4-java | 1.4.1 | block | -0.4% | 7,573.0 | 11,915.8 | ✔ |
+| org.lz4:lz4-java | 1.4.1 | stream | -0.03% | 2,460.3 | 3,127.1 | ✔ |
+| com.github.luben:zstd-jni (level=1) | 1.3.3-4 | block | 4.2% | 622.5 | 714.8 | ✔ |
+| com.github.luben:zstd-jni (level=1) | 1.3.3-4 | stream | 4.2% | 561.3 | 636.7 | ✔ |
+| com.github.luben:zstd-jni (level=3) | 1.3.3-4 | block | 4.2% | 583.6 | 714.6 | ✔ |
+| com.github.luben:zstd-jni (level=3) | 1.3.3-4 | stream | 4.2% | 530.4 | 618.9 | ✔ |
+| com.github.luben:zstd-jni (level=6) | 1.3.3-4 | block | 4.2% | 246.6 | 718.2 | ✔ |
+| com.github.luben:zstd-jni (level=6) | 1.3.3-4 | stream | 4.2% | 215.4 | 591.9 | ✔ |
+| com.github.luben:zstd-jni (level=9) | 1.3.3-4 | block | 4.2% | 164.6 | 708.9 | ✔ |
+| com.github.luben:zstd-jni (level=9) | 1.3.3-4 | stream | 4.2% | 150.9 | 587.2 | ✔ |
+| com.github.luben:zstd-jni (level=16) | 1.3.3-4 | block | 4.1% | 8.8 | 699.9 | ✔ |
+| com.github.luben:zstd-jni (level=16) | 1.3.3-4 | stream | 4.1% | 8.7 | 578.9 | ✔ |
+| java:zlib | Java 1.8.0_162 | stream | 3.9% | 25.5 | 191.4 | ✔ |
+| java:gzip | Java 1.8.0_162 | stream | 3.9% | 25.0 | 195.0 | ✔ |
+| org.apache.commons:commons-compress (bzip2) | 1.16.1 | stream | 3.2% | 5.6 | 14.8 | ✔ |
 
-## Random Floating-Point CSV ASCII Text
+## CSV Formatted Text of Random Floating-Point Values, ASCII Text
 
-datasize=100MB, entropy=2.460
+<div><small><b>Block Size</b>: 10.0MB, <b>Block Entropy</b>: 2.461, <b>Filled By</b>: <code>0.932993485288541,0.8330913489710237,0.32647575623...</code>, <b>Sample Bytes</b>: <small>30 2E 39 33 32 39 39 33 34 38 35 32 38 38 35...</small> </small></div>
 
-| Name | Version | Method | Rate | Compress [MB/sec] | Decompress [MB/sec] | ERR |
-|:-----|:--------|:-------|-----:|------------------:|--------------------:|:----|
-| java:*uncompress* | Java 1.8.0_161 | buffer | 0.0% | 7,117.9 | 7,215.0 |  |
-| java:*uncompress* | Java 1.8.0_161 | stream | 0.0% | 7,217.0 | 2,407.4 |  |
-| org.xerial.snappy:snappy-java | 1.1.7.1 | buffer | 22.5% | 167.3 | 596.5 |  |
-| org.xerial.snappy:snappy-java | 1.1.7.1 | stream | 20.4% | 161.8 | 471.2 |  |
-| org.lz4:lz4-java | 1.4.1 | buffer | 23.4% | 152.7 | 384.4 |  |
-| org.lz4:lz4-java | 1.4.1 | stream | 24.6% | 149.9 | 297.4 |  |
-| com.github.luben:zstd-jni (level=1) | 1.3.3-4 | buffer | 55.4% | 184.7 | 671.4 |  |
-| com.github.luben:zstd-jni (level=1) | 1.3.3-4 | stream | 55.4% | 158.6 | 524.3 |  |
-| com.github.luben:zstd-jni (level=3) | 1.3.3-4 | buffer | 52.2% | 78.9 | 359.4 |  |
-| com.github.luben:zstd-jni (level=3) | 1.3.3-4 | stream | 52.2% | 74.1 | 298.0 |  |
-| com.github.luben:zstd-jni (level=6) | 1.3.3-4 | buffer | 54.4% | 38.2 | 354.7 |  |
-| com.github.luben:zstd-jni (level=6) | 1.3.3-4 | stream | 54.4% | 33.6 | 289.4 |  |
-| com.github.luben:zstd-jni (level=9) | 1.3.3-4 | buffer | 54.7% | 9.8 | 368.0 |  |
-| com.github.luben:zstd-jni (level=9) | 1.3.3-4 | stream | 54.7% | 8.6 | 294.9 |  |
-| com.github.luben:zstd-jni (level=16) | 1.3.3-4 | buffer | 59.0% | 1.7 | 607.8 |  |
-| com.github.luben:zstd-jni (level=16) | 1.3.3-4 | stream | 59.0% | 1.7 | 479.6 |  |
-| java:zlib | Java 1.8.0_161 | stream | 54.2% | 9.6 | 162.0 |  |
-| java:gzip | Java 1.8.0_161 | stream | 54.2% | 9.8 | 166.8 |  |
-| org.apache.commons:commons-compress (bzip2) | 1.16.1 | stream | 60.1% | 6.5 | 11.0 |  |
+| Name | Version | Method | Rate | Compress <small>[MB/sec]</small> | Decompress <small>[MB/sec]</small> |     |
+|:-----|:--------|:-------|-----:|---------------------------------:|-----------------------------------:|:----|
+| java:*uncompress* | Java 1.8.0_162 | block | 0.0% | 8,717.0 | 8,741.1 | ✔ |
+| java:*uncompress* | Java 1.8.0_162 | stream | 0.0% | 8,866.0 | 6,005.4 | ✔ |
+| org.xerial.snappy:snappy-java | 1.1.7.1 | block | 22.5% | 212.7 | 758.1 | ✔ |
+| org.xerial.snappy:snappy-java | 1.1.7.1 | stream | 20.4% | 206.2 | 697.7 | ✔ |
+| org.lz4:lz4-java | 1.4.1 | block | 23.4% | 283.0 | 1,633.3 | ✔ |
+| org.lz4:lz4-java | 1.4.1 | stream | 24.6% | 263.7 | 1,026.4 | ✔ |
+| com.github.luben:zstd-jni (level=1) | 1.3.3-4 | block | 55.4% | 232.1 | 868.1 | ✔ |
+| com.github.luben:zstd-jni (level=1) | 1.3.3-4 | stream | 55.4% | 189.1 | 752.1 | ✔ |
+| com.github.luben:zstd-jni (level=3) | 1.3.3-4 | block | 52.2% | 99.3 | 471.5 | ✔ |
+| com.github.luben:zstd-jni (level=3) | 1.3.3-4 | stream | 52.2% | 93.6 | 412.4 | ✔ |
+| com.github.luben:zstd-jni (level=6) | 1.3.3-4 | block | 54.4% | 55.9 | 457.3 | ✔ |
+| com.github.luben:zstd-jni (level=6) | 1.3.3-4 | stream | 54.4% | 51.4 | 402.2 | ✔ |
+| com.github.luben:zstd-jni (level=9) | 1.3.3-4 | block | 54.7% | 19.8 | 450.7 | ✔ |
+| com.github.luben:zstd-jni (level=9) | 1.3.3-4 | stream | 54.7% | 17.9 | 409.6 | ✔ |
+| com.github.luben:zstd-jni (level=16) | 1.3.3-4 | block | 59.0% | 2.4 | 738.9 | ✔ |
+| com.github.luben:zstd-jni (level=16) | 1.3.3-4 | stream | 59.0% | 2.5 | 632.2 | ✔ |
+| java:zlib | Java 1.8.0_162 | stream | 54.2% | 11.9 | 207.9 | ✔ |
+| java:gzip | Java 1.8.0_162 | stream | 54.2% | 11.9 | 216.4 | ✔ |
+| org.apache.commons:commons-compress (bzip2) | 1.16.1 | stream | 60.0% | 8.3 | 19.3 | ✔ |
 
 ## United States Declaration of Independence, ASCII Text
 
-datasize=0MB, entropy=3.509
+<div><small><b>Block Size</b>: 9.4kB, <b>Block Entropy</b>: 3.424, <b>Filled By</b>: <code>IN CONGRESS, JULY 4, 1776.
+THE UNANIMOUS
+DECLARATI...</code>, <b>Sample Bytes</b>: <small>49 4E 20 43 4F 4E 47 52 45 53 53 2C 20 4A 55...</small> </small></div>
 
-| Name | Version | Method | Rate | Compress [MB/sec] | Decompress [MB/sec] | ERR |
-|:-----|:--------|:-------|-----:|------------------:|--------------------:|:----|
-| java:*uncompress* | Java 1.8.0_161 | buffer | 0.0% | 55,172.6 | 55,784.8 |  |
-| java:*uncompress* | Java 1.8.0_161 | stream | 0.0% | 53,351.7 | 3,404.3 |  |
-| org.xerial.snappy:snappy-java | 1.1.7.1 | buffer | 31.8% | 224.3 | 1,274.9 |  |
-| org.xerial.snappy:snappy-java | 1.1.7.1 | stream | 31.5% | 221.3 | 631.3 |  |
-| org.lz4:lz4-java | 1.4.1 | buffer | 31.2% | 255.8 | 740.9 |  |
-| org.lz4:lz4-java | 1.4.1 | stream | 30.7% | 129.5 | 418.5 |  |
-| com.github.luben:zstd-jni (level=1) | 1.3.3-4 | buffer | 51.8% | 147.6 | 459.3 |  |
-| com.github.luben:zstd-jni (level=1) | 1.3.3-4 | stream | 50.4% | 39.5 | 67.0 |  |
-| com.github.luben:zstd-jni (level=3) | 1.3.3-4 | buffer | 53.0% | 91.3 | 367.0 |  |
-| com.github.luben:zstd-jni (level=3) | 1.3.3-4 | stream | 53.1% | 12.9 | 68.9 |  |
-| com.github.luben:zstd-jni (level=6) | 1.3.3-4 | buffer | 54.7% | 37.2 | 166.2 |  |
-| com.github.luben:zstd-jni (level=6) | 1.3.3-4 | stream | 54.0% | 4.7 | 62.8 |  |
-| com.github.luben:zstd-jni (level=9) | 1.3.3-4 | buffer | 54.8% | 19.7 | 328.0 |  |
-| com.github.luben:zstd-jni (level=9) | 1.3.3-4 | stream | 54.2% | 2.3 | 61.6 |  |
-| com.github.luben:zstd-jni (level=16) | 1.3.3-4 | buffer | 55.2% | 9.2 | 236.4 |  |
-| com.github.luben:zstd-jni (level=16) | 1.3.3-4 | stream | 54.7% | 0.6 | 53.5 |  |
-| java:zlib | Java 1.8.0_161 | stream | 54.6% | 26.2 | 113.3 |  |
-| java:gzip | Java 1.8.0_161 | stream | 54.5% | 19.0 | 92.0 |  |
-| org.apache.commons:commons-compress (bzip2) | 1.16.1 | stream | 58.2% | 1.7 | 10.9 |  |
+| Name | Version | Method | Rate | Compress <small>[MB/sec]</small> | Decompress <small>[MB/sec]</small> |     |
+|:-----|:--------|:-------|-----:|---------------------------------:|-----------------------------------:|:----|
+| java:*uncompress* | Java 1.8.0_162 | block | 0.0% | 70,186.7 | 88,299.6 | ✔ |
+| java:*uncompress* | Java 1.8.0_162 | stream | 0.0% | 64,286.8 | 13,451.4 | ✔ |
+| org.xerial.snappy:snappy-java | 1.1.7.1 | block | 30.7% | 288.8 | 1,659.8 | ✔ |
+| org.xerial.snappy:snappy-java | 1.1.7.1 | stream | 30.4% | 282.0 | 1,254.1 | ✔ |
+| org.lz4:lz4-java | 1.4.1 | block | 30.6% | 559.9 | 2,339.7 | ✔ |
+| org.lz4:lz4-java | 1.4.1 | stream | 30.2% | 366.9 | 1,200.6 | ✔ |
+| com.github.luben:zstd-jni (level=1) | 1.3.3-4 | block | 51.7% | 182.3 | 565.2 | ✔ |
+| com.github.luben:zstd-jni (level=1) | 1.3.3-4 | stream | 50.3% | 79.5 | 113.9 | ✔ |
+| com.github.luben:zstd-jni (level=3) | 1.3.3-4 | block | 52.8% | 107.7 | 246.3 | ✔ |
+| com.github.luben:zstd-jni (level=3) | 1.3.3-4 | stream | 52.8% | 28.9 | 110.0 | ✔ |
+| com.github.luben:zstd-jni (level=6) | 1.3.3-4 | block | 54.4% | 49.6 | 468.7 | ✔ |
+| com.github.luben:zstd-jni (level=6) | 1.3.3-4 | stream | 53.8% | 10.8 | 103.7 | ✔ |
+| com.github.luben:zstd-jni (level=9) | 1.3.3-4 | block | 54.5% | 25.8 | 413.9 | ✔ |
+| com.github.luben:zstd-jni (level=9) | 1.3.3-4 | stream | 53.9% | 4.9 | 103.8 | ✔ |
+| com.github.luben:zstd-jni (level=16) | 1.3.3-4 | block | 55.0% | 11.7 | 286.4 | ✔ |
+| com.github.luben:zstd-jni (level=16) | 1.3.3-4 | stream | 54.4% | 1.2 | 85.1 | ✔ |
+| java:zlib | Java 1.8.0_162 | stream | 54.3% | 33.4 | 157.1 | ✔ |
+| java:gzip | Java 1.8.0_162 | stream | 54.1% | 21.0 | 116.6 | ✔ |
+| org.apache.commons:commons-compress (bzip2) | 1.16.1 | stream | 57.8% | 3.6 | 20.1 | ✔ |
 
 ## 夏目漱石 こころ, Japanese UTF-8 Text
 
-datasize=0MB, entropy=3.194
+<div><small><b>Block Size</b>: 473.2kB, <b>Block Entropy</b>: 3.182, <b>Filled By</b>: <code>　私はその人を常に先生と呼んでいた。だからここでも...</code>, <b>Sample Bytes</b>: <small>E3 80 80 E7 A7 81 E3 81 AF E3 81 9D E3 81 AE...</small> </small></div>
 
-| Name | Version | Method | Rate | Compress [MB/sec] | Decompress [MB/sec] | ERR |
-|:-----|:--------|:-------|-----:|------------------:|--------------------:|:----|
-| java:*uncompress* | Java 1.8.0_161 | buffer | 0.0% | 20,566.1 | 19,980.4 |  |
-| java:*uncompress* | Java 1.8.0_161 | stream | 0.0% | 20,339.0 | 3,337.9 |  |
-| org.xerial.snappy:snappy-java | 1.1.7.1 | buffer | 47.4% | 182.2 | 897.1 |  |
-| org.xerial.snappy:snappy-java | 1.1.7.1 | stream | 45.5% | 177.6 | 631.7 |  |
-| org.lz4:lz4-java | 1.4.1 | buffer | 44.9% | 210.0 | 473.8 |  |
-| org.lz4:lz4-java | 1.4.1 | stream | 44.1% | 204.9 | 367.2 |  |
-| com.github.luben:zstd-jni (level=1) | 1.3.3-4 | buffer | 64.4% | 174.1 | 617.1 |  |
-| com.github.luben:zstd-jni (level=1) | 1.3.3-4 | stream | 64.4% | 145.4 | 412.4 |  |
-| com.github.luben:zstd-jni (level=3) | 1.3.3-4 | buffer | 68.2% | 104.9 | 483.5 |  |
-| com.github.luben:zstd-jni (level=3) | 1.3.3-4 | stream | 68.2% | 94.4 | 305.3 |  |
-| com.github.luben:zstd-jni (level=6) | 1.3.3-4 | buffer | 69.8% | 40.7 | 478.3 |  |
-| com.github.luben:zstd-jni (level=6) | 1.3.3-4 | stream | 69.8% | 26.4 | 246.7 |  |
-| com.github.luben:zstd-jni (level=9) | 1.3.3-4 | buffer | 71.0% | 22.5 | 570.4 |  |
-| com.github.luben:zstd-jni (level=9) | 1.3.3-4 | stream | 71.1% | 19.0 | 290.7 |  |
-| com.github.luben:zstd-jni (level=16) | 1.3.3-4 | buffer | 74.0% | 3.3 | 566.8 |  |
-| com.github.luben:zstd-jni (level=16) | 1.3.3-4 | stream | 74.0% | 3.9 | 358.3 |  |
-| java:zlib | Java 1.8.0_161 | stream | 68.6% | 11.8 | 190.2 |  |
-| java:gzip | Java 1.8.0_161 | stream | 68.6% | 12.0 | 190.3 |  |
-| org.apache.commons:commons-compress (bzip2) | 1.16.1 | stream | 78.8% | 8.8 | 18.4 |  |
+| Name | Version | Method | Rate | Compress <small>[MB/sec]</small> | Decompress <small>[MB/sec]</small> |     |
+|:-----|:--------|:-------|-----:|---------------------------------:|-----------------------------------:|:----|
+| java:*uncompress* | Java 1.8.0_162 | block | 0.0% | 25,456.1 | 24,928.1 | ✔ |
+| java:*uncompress* | Java 1.8.0_162 | stream | 0.0% | 25,433.8 | 11,426.4 | ✔ |
+| org.xerial.snappy:snappy-java | 1.1.7.1 | block | 47.4% | 228.5 | 1,099.3 | ✔ |
+| org.xerial.snappy:snappy-java | 1.1.7.1 | stream | 45.5% | 223.2 | 955.0 | ✔ |
+| org.lz4:lz4-java | 1.4.1 | block | 44.9% | 356.8 | 1,899.7 | ✔ |
+| org.lz4:lz4-java | 1.4.1 | stream | 44.1% | 353.1 | 1,283.5 | ✔ |
+| com.github.luben:zstd-jni (level=1) | 1.3.3-4 | block | 64.4% | 219.1 | 763.0 | ✔ |
+| com.github.luben:zstd-jni (level=1) | 1.3.3-4 | stream | 64.4% | 208.8 | 564.2 | ✔ |
+| com.github.luben:zstd-jni (level=3) | 1.3.3-4 | block | 68.2% | 146.3 | 739.1 | ✔ |
+| com.github.luben:zstd-jni (level=3) | 1.3.3-4 | stream | 68.2% | 137.4 | 542.1 | ✔ |
+| com.github.luben:zstd-jni (level=6) | 1.3.3-4 | block | 69.8% | 62.3 | 723.2 | ✔ |
+| com.github.luben:zstd-jni (level=6) | 1.3.3-4 | stream | 69.8% | 65.7 | 561.1 | ✔ |
+| com.github.luben:zstd-jni (level=9) | 1.3.3-4 | block | 71.0% | 38.9 | 831.1 | ✔ |
+| com.github.luben:zstd-jni (level=9) | 1.3.3-4 | stream | 71.0% | 35.3 | 597.5 | ✔ |
+| com.github.luben:zstd-jni (level=16) | 1.3.3-4 | block | 74.0% | 6.7 | 853.3 | ✔ |
+| com.github.luben:zstd-jni (level=16) | 1.3.3-4 | stream | 74.0% | 5.7 | 616.7 | ✔ |
+| java:zlib | Java 1.8.0_162 | stream | 68.5% | 15.4 | 252.8 | ✔ |
+| java:gzip | Java 1.8.0_162 | stream | 68.5% | 15.5 | 264.1 | ✔ |
+| org.apache.commons:commons-compress (bzip2) | 1.16.1 | stream | 78.7% | 11.3 | 29.5 | ✔ |
 

@@ -1,11 +1,12 @@
-package at.hazm.benchmark.compression
+package at.hazm.benchmark.compression.impl
 
 import java.io.{InputStream, OutputStream}
 
+import at.hazm.benchmark.compression.Compressor
 import org.meteogroup.jbrotli.io.{BrotliInputStream, BrotliOutputStream}
 import org.meteogroup.jbrotli.{BrotliCompressor, BrotliDeCompressor, Brotli => B}
 
-object Brotli extends Compressor.Buffer with Compressor.Stream[BrotliOutputStream] {
+object Brotli extends Compressor.Block with Compressor.Stream[BrotliOutputStream] {
   val id:String = "org.meteogroup.jbrotli:jbrotli"
   override val version:String = "0.5.0"
 

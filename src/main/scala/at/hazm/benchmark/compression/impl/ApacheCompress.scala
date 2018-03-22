@@ -1,7 +1,8 @@
-package at.hazm.benchmark.compression
+package at.hazm.benchmark.compression.impl
 
 import java.io.{InputStream, OutputStream}
 
+import at.hazm.benchmark.compression.Compressor
 import org.apache.commons.compress.compressors.bzip2.{BZip2CompressorInputStream, BZip2CompressorOutputStream}
 import org.apache.commons.compress.compressors.snappy.{SnappyCompressorInputStream, SnappyCompressorOutputStream}
 import org.apache.commons.compress.compressors.zstandard.{ZstdCompressorInputStream, ZstdCompressorOutputStream}

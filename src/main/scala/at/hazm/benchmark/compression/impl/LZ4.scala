@@ -1,10 +1,11 @@
-package at.hazm.benchmark.compression
+package at.hazm.benchmark.compression.impl
 
 import java.io.{InputStream, OutputStream}
 
+import at.hazm.benchmark.compression.Compressor
 import net.jpountz.lz4.{LZ4BlockInputStream, LZ4BlockOutputStream, LZ4Factory}
 
-object LZ4 extends Compressor.Buffer with Compressor.Stream[LZ4BlockOutputStream] {
+object LZ4 extends Compressor.Block with Compressor.Stream[LZ4BlockOutputStream] {
   val id:String = "org.lz4:lz4-java"
   override val version:String = "1.4.1"
 

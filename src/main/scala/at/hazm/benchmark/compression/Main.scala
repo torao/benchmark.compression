@@ -2,131 +2,103 @@ package at.hazm.benchmark.compression
 
 import java.io._
 import java.net.InetAddress
-import java.nio.ByteBuffer
 import java.nio.charset.StandardCharsets
+import java.nio.file.Files
 import java.text.{DateFormat, SimpleDateFormat}
 import java.util.concurrent.atomic.AtomicBoolean
-import java.util.{Date, Random, Timer, TimerTask}
+import java.util.{Date, Properties, Timer, TimerTask}
+
+import at.hazm.benchmark.compression.Benchmark._
+import at.hazm.benchmark.compression.impl._
 
 object Main {
 
-  val algorithms = Seq(
+  /** Compression algorithm implementations to benchmark. */
+  val CompressionImpls = Seq(
     NOOP, SnappyJava, LZ4,
     ZStandard(1), ZStandard(3), ZStandard(6), ZStandard(9), ZStandard(16),
     ZLib, GZip, ApacheCompress.BZIP2 /*, Brotli */)
-  val loopTimeInMillis:Long = 10 * 1000
-  val maxBinarySize:Int = 100 * 1024 * 1024
+
+  /** ByteArray generator for benchmark. */
+  val Benchmarks = Seq(
+    ZeroFilledByteArray, UniformRandomByteArray, GaussianRandomIntArray(sigma2 = 100), GaussianRandomDoubleArray(),
+    RandomDoubleCSV, USDeclarationOfIndependenceText, JapaneseNovelKokoro
+  )
+
+  val MeasurementTimeInMillis:Long = 10 * 1000
+
+  val PreferredBinarySize:Int = 10 * 1024 * 1024
 
   def main(args:Array[String]):Unit = {
 
     // load classes and warming up JIT
-    locally {
-      val zeros = new Array[Byte](maxBinarySize)
-      exec(System.out, f"Warning up with zero-filled bytes", zeros)
-    }
+    System.out.println("# WARMING UP!")
+    exec(System.out, ZeroFilledByteArray)
 
+    // open report file and write headings
     val fileName = "benchmark_" + System.getProperty("os.arch").toLowerCase + "_" +
       System.getProperty("os.name").replaceAll("\\s+", "").toLowerCase + "_" +
       new SimpleDateFormat("yyyyMMdd").format(new Date()) + ".md"
     val out = new PrintWriter(new OutputStreamWriter(new FileOutputStream(fileName), StandardCharsets.UTF_8))
     out.println("# JavaVM Compression Libraries Benchmark & Comparison")
     out.println()
-    out.println(DateFormat.getDateTimeInstance().format(new Date()))
-    out.println(System.getProperty("user.name") + " @ " + InetAddress.getLocalHost.getHostName)
-    out.println(System.getProperty("java.vm.name") + " " + System.getProperty("java.vm.vendor") + " " + System.getProperty("java.vm.version"))
+    out.println(shortInfo(Seq(
+      "Date" -> DateFormat.getDateTimeInstance().format(new Date()),
+      "Author" -> s"${System.getProperty("user.name")} @ ${InetAddress.getLocalHost.getHostName}",
+      "JavaVM" -> s"${System.getProperty("java.vm.name")} ${System.getProperty("java.vm.vendor")} ${System.getProperty("java.vm.version")}"
+    ) ++ {
+      val file = new File("machine-info.xml")
+      if(file.isFile) {
+        val prop = new Properties()
+        prop.loadFromXML(new ByteArrayInputStream(Files.readAllBytes(file.toPath)))
+        Seq("product" -> "Machine Model", "platform" -> "Operating System", "processor" -> "CPU", "memory" -> "Memory", "description" -> "Description").map { case (key, title) =>
+          title -> prop.getProperty(key, "-")
+        }
+      } else Seq.empty
+    }:_*))
     out.println()
 
-    // zero-filled array
-    locally {
-      val zeros = new Array[Byte](maxBinarySize)
-      exec(out, f"Zero-filled `Byte[${zeros.length}]` Array", zeros)
-      out.flush()
-    }
-
-    // Uniform random bytes
-    locally {
-      val random = new Array[Byte](maxBinarySize)
-      newRandom().nextBytes(random)
-      exec(out, f"Uniform Random filled `Byte[${random.length}%d]` Array", random)
-      out.flush()
-    }
-
-    // Gaussian random INT32
-    locally {
-      val random = randomBinary(maxBinarySize / 4, 4) { (buffer, random) =>
-        buffer.putInt((random.nextGaussian() * math.sqrt(100)).toInt)
-      }
-      exec(out, f"Norm(μ=0,σ<sup>2</sup>=100) Random `Int[${random.length / 4}%d]` Array", random)
-      out.flush()
-    }
-
-    // Gaussian random FLOAT64
-    locally {
-      val random = randomBinary(maxBinarySize / 8, 8) { (buffer, random) =>
-        buffer.putDouble(random.nextGaussian())
-      }
-      exec(out, f"Norm(μ=0,σ<sup>2</sup>=1) Random `Double[${random.length / 8}%d]` Array", random)
-      out.flush()
-    }
-
-    // CSV data
-    locally {
-      val random = newRandom()
-      val buffer = new StringBuilder()
-      while(buffer.length < maxBinarySize) {
-        if(buffer.nonEmpty) buffer.append(',')
-        buffer.append(random.nextDouble())
-      }
-      val sample = buffer.toString().getBytes(StandardCharsets.US_ASCII)
-      exec(out, f"Random Floating-Point CSV ASCII Text", sample)
-      out.flush()
-    }
-
-    // The unanimous declaration of the thirteen United States of America
-    locally {
-      val text = loadText("the-unanimous-declaration-of-the-thirteen-USA.txt")
-      val sample = text.getBytes(StandardCharsets.US_ASCII)
-      exec(out, f"United States Declaration of Independence, ASCII Text", sample)
-      out.flush()
-    }
-
-    // Japanese text as UTF-8
-    locally {
-      val text = loadText("soseki-kokoro.txt")
-      val sample = text.getBytes(StandardCharsets.UTF_8)
-      exec(out, f"夏目漱石 こころ, Japanese UTF-8 Text", sample)
+    // execute benchmark and write report
+    Benchmarks.foreach { benchmark =>
+      exec(out, benchmark)
       out.flush()
     }
 
     out.close()
   }
 
-  def exec(out:Appendable, title:String, buffer:Array[Byte], msec:Long = loopTimeInMillis):Unit = {
-    System.out.println(title)
+  def exec(out:Appendable, bm:Benchmark, msec:Long = MeasurementTimeInMillis):Unit = {
+    val title = bm.title(PreferredBinarySize)
+    val sample = bm.newSample(PreferredBinarySize)
 
     def flush():Unit = out match {
-      case p:PrintWriter => p.flush();
+      case p:PrintWriter => p.flush()
       case p:PrintStream => p.flush()
+      case _ => ()
     }
 
+    System.out.println(title)
+    val info = shortInfo(
+      "Block Size" -> s"${Report.unitText(sample.length)}B",
+      "Block Entropy" -> Report.flexPrecision(entropy(sample), 3, 6),
+      "Filled By" -> s"<code>${bm.sampleCode()}</code>",
+      "Sample Bytes" -> s"<small>${sample.take(15).map(b => f"${b & 0xFF}%02X").mkString("", " ", "...")}</small>"
+    )
+    out.append(s"## $title\n\n$info\n\n")
     out.append(
-      f"""## $title
-         |
-         |datasize=${buffer.length / 1024 / 1024}%,dMB, entropy=${entropy(buffer)}%s
-         |
-         || Name | Version | Method | Rate | Compress [MB/sec] | Decompress [MB/sec] |     |
-         ||:-----|:--------|:-------|-----:|------------------:|--------------------:|:----|
+      f"""|| Name | Version | Method | Rate | Compress <small>[MB/sec]</small> | Decompress <small>[MB/sec]</small> |     |
+         ||:-----|:--------|:-------|-----:|---------------------------------:|-----------------------------------:|:----|
          |""".stripMargin)
-    algorithms.foreach { cmp =>
+    CompressionImpls.foreach { cmp =>
+      // run block type compression benchmark
       cmp match {
-        case buf:Compressor.Buffer =>
-          benchmark(buffer, buf:Compressor.Buffer, msec).print(out)
+        case buf:Compressor.Block => benchmark(sample, buf:Compressor.Block, msec).print(out)
         case _ =>
       }
       flush()
+      // run stream type compression benchmark
       cmp match {
-        case str:Compressor.Stream[_] =>
-          benchmark(buffer, str, msec).print(out)
+        case str:Compressor.Stream[_] => benchmark(sample, str, msec).print(out)
         case _ =>
       }
       flush()
@@ -135,19 +107,8 @@ object Main {
     flush()
   }
 
-  private[this] def randomBinary(length:Int, width:Int)(append:(ByteBuffer, Random) => Unit):Array[Byte] = {
-    val random = newRandom()
-    val buffer = ByteBuffer.allocate(length * width)
-    for(_ <- 0 until length) {
-      append(buffer, random)
-    }
-    buffer.array()
-  }
-
-  private[this] def newRandom():Random = {
-    val random = new Random(12345)
-    random.nextDouble()
-    random
+  private[this] def shortInfo(info:(String, String)*):String = {
+    info.filter(_._2.nonEmpty).map { case (name, value) => s"<b>$name</b>: $value" }.mkString("<div><small>", ", ", " </small></div>")
   }
 
   private[this] val timer = new Timer(true)
@@ -162,7 +123,7 @@ object Main {
     System.currentTimeMillis() - t0
   }
 
-  private[this] def benchmark(uncompressed:Array[Byte], cmp:Compressor.Buffer, msec:Long):Report = {
+  private[this] def benchmark(uncompressed:Array[Byte], cmp:Compressor.Block, msec:Long):Report = {
     val compressed = new Array[Byte]((uncompressed.length * 1.2).toInt)
     val length = cmp.compress(uncompressed, compressed)
     val expected = java.util.Arrays.copyOf(uncompressed, uncompressed.length)
@@ -186,7 +147,7 @@ object Main {
       } while(!stopped())
     }
 
-    Report(cmp, "buffer",
+    Report(cmp, "block",
       (uncompressed.length - length).toDouble / uncompressed.length,
       uncompressed.length * compressCount * 1000L / compressTime.toDouble,
       uncompressed.length * uncompressCount * 1000L / uncompressTime.toDouble,
@@ -254,44 +215,23 @@ object Main {
     if(i < 0) None else Some(i)
   }
 
-  private[this] def entropy(values:Array[Byte]):String = {
-    val counts = new Array[Int](Byte.MaxValue - Byte.MinValue + 1)
-    values.indices.foreach(i => counts(values(i) - Byte.MinValue) += 1)
-    val e = -counts.map(c => (c + 1).toDouble / (values.length + 1)).map(p => p * math.log(p)).sum
-    f"$e%,.3f"
-  }
-
-  private[this] def loadText(name:String):String = {
-    val in = getClass.getClassLoader.getResourceAsStream("at/hazm/benchmark/compression/" + name)
-    val text = new String(Iterator.continually(in.read()).takeWhile(_ >= 0).map(_.toByte).toArray, StandardCharsets.UTF_8)
-    in.close()
-    text
-  }
-
-  case class Report(cmp:Compressor, method:String, rate:Double, compress:Double, decompress:Double, error:String = "") {
-    def print(out:Appendable):Unit = {
-      val ratePercent = rate match {
-        case _ if rate == 0.0 || rate == 1.0 => f"${rate * 100}%.1f%%"
-        case _ if rate > 0.9999999 => f"${rate * 100}%.6f%%"
-        case _ if rate > 0.999999 => f"${rate * 100}%.5f%%"
-        case _ if rate > 0.99999 => f"${rate * 100}%.4f%%"
-        case _ if rate > 0.9999 => f"${rate * 100}%.3f%%"
-        case _ if rate > 0.999 => f"${rate * 100}%.2f%%"
-        case _ if math.abs(rate) < 0.0001 => f"${rate * 100}%.5f%%"
-        case _ if math.abs(rate) < 0.001 => f"${rate * 100}%.4f%%"
-        case _ if math.abs(rate) < 0.01 => f"${rate * 100}%.3f%%"
-        case _ if math.abs(rate) < 0.10 => f"${rate * 100}%.2f%%"
-        case _ => f"${rate * 100}%.1f%%"
-      }
-      out.append(
-        Seq(cmp.id, cmp.version, method,
-          ratePercent,
-          f"${compress / 1024 / 1024.0}%,.1f",
-          f"${decompress / 1024 / 1024.0}%,.1f",
-          if(error.isEmpty) "✔" else "✘" + error
-        ).mkString("| ", " | ", " |\n")
-      )
+  /**
+    * Calculate information entropy for specified bytes.
+    *
+    * @param values bytes to calculate its entropy
+    * @return entropy string
+    */
+  private[this] def entropy(values:Array[Byte]):Double = {
+    // calculate entropy
+    -values.indices.foldLeft(new Array[Int](256)) { case (array, i) =>
+      array(values(i) - Byte.MinValue) += 1
+      array
     }
+      // to avoid divergence, the number of occurrence 1 is assigned to all bytes
+      .map(_ + 1)
+      // therefore the total increases +256
+      .map { count => count.toDouble / (values.length + 256) }
+      .map(p => p * math.log(p)).sum
   }
 
 }

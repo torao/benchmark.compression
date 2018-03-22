@@ -1,10 +1,11 @@
-package at.hazm.benchmark.compression
+package at.hazm.benchmark.compression.impl
 
 import java.io.{InputStream, OutputStream}
 
+import at.hazm.benchmark.compression.Compressor
 import org.xerial.snappy.{Snappy, SnappyInputStream, SnappyOutputStream}
 
-object SnappyJava extends Compressor.Buffer with Compressor.Stream[SnappyOutputStream] {
+object SnappyJava extends Compressor.Block with Compressor.Stream[SnappyOutputStream] {
   val id:String = "org.xerial.snappy:snappy-java"
   override val version:String = "1.1.7.1"
 
