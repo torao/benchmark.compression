@@ -1,4 +1,4 @@
-# JavaVM Compression Library Benchmark & Comparison
+# JavaVM Compression Libraries Benchmark & Comparison
 
 2018/03/22 2:06:36
 Takami Torao @ graphite
@@ -10,7 +10,7 @@ datasize=100MB, entropy=0.000
 
 | Name | Version | Method | Rate | Compress [MB/sec] | Decompress [MB/sec] | ERR |
 |:-----|:--------|:-------|-----:|------------------:|--------------------:|:----|
-| java:*uncompress* | Java 1.8.0_161 | buffer | 0.0% | 6,200.7 | 7,950.5 |  |
+| java:*uncompress* | Java 1.8.0_161 | buffer | 0.0% | 6,200.7 | 7,950.5 | ✔ |
 | java:*uncompress* | Java 1.8.0_161 | stream | 0.0% | 7,600.0 | 4,177.5 |  |
 | org.xerial.snappy:snappy-java | 1.1.7.1 | buffer | 95.3% | 5,600.5 | 2,399.5 |  |
 | org.xerial.snappy:snappy-java | 1.1.7.1 | stream | 95.3% | 3,704.8 | 1,739.7 |  |
