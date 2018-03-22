@@ -1,10 +1,10 @@
 package at.hazm.benchmark.compression.impl
 
-import java.io.{InputStream, OutputStream}
+import java.io.{FilterInputStream, FilterOutputStream, InputStream, OutputStream}
 
 import at.hazm.benchmark.compression.Compressor
 
-object NOOP extends Compressor.Block with Compressor.Stream[OutputStream] {
+object NOOP extends Compressor.Block with Compressor.Stream {
   val id:String = "java:*uncompress*"
 
   override def compress(uncompressed:Array[Byte], compressed:Array[Byte]):Int = {
@@ -17,9 +17,7 @@ object NOOP extends Compressor.Block with Compressor.Stream[OutputStream] {
     compressed.length
   }
 
-  override def init(out:OutputStream, uncompressedSize:Int) = out
+  override def wrapInput(in:InputStream):InputStream = new FilterInputStream(in)
 
-  override def finish(out:OutputStream):Unit = ()
-
-  override def wrap(in:InputStream):InputStream = in
+  override def wrapOutput(out:OutputStream, expandSize:Int):OutputStream = new FilterOutputStream(out)
 }

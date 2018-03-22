@@ -11,34 +11,32 @@ object ApacheCompress {
   val Version:String = "1.16.1"
   val Id = "org.apache.commons:commons-compress"
 
-  object Snappy extends Compressor.Stream[SnappyCompressorOutputStream] {
+  object Snappy extends Compressor.Stream {
     val id:String = s"$Id (snappy)"
     override val version:String = Version
 
-    override def init(out:OutputStream, uncompressedSize:Int) = new SnappyCompressorOutputStream(out, uncompressedSize)
+    override def wrapInput(in:InputStream):InputStream = new SnappyCompressorInputStream(in)
 
-    override def finish(out:SnappyCompressorOutputStream):Unit = out.finish()
-
-    override def wrap(in:InputStream):InputStream = new SnappyCompressorInputStream(in)
+    override def wrapOutput(out:OutputStream, expandSize:Int):OutputStream = withOnClosing[SnappyCompressorOutputStream](new SnappyCompressorOutputStream(out, expandSize), _.finish())
   }
 
   // ZStandard implementation of Apache Commons rely on "luben/zstd-jni"
-  object ZStandard extends Compressor.Stream[ZstdCompressorOutputStream] {
+  object ZStandard extends Compressor.Stream {
     val id:String = s"$Id (zstandard)"
     override val version:String = Version
 
-    override def init(out:OutputStream, uncompressedSize:Int) = new ZstdCompressorOutputStream(out)
+    override def wrapInput(in:InputStream):InputStream = new ZstdCompressorInputStream(in)
 
-    override def wrap(in:InputStream):InputStream = new ZstdCompressorInputStream(in)
+    override def wrapOutput(out:OutputStream, expandSize:Int):OutputStream = new ZstdCompressorOutputStream(out)
   }
 
-  object BZIP2 extends Compressor.Stream[BZip2CompressorOutputStream] {
+  object BZIP2 extends Compressor.Stream {
     val id:String = s"$Id (bzip2)"
     override val version:String = Version
 
-    override def init(out:OutputStream, uncompressedSize:Int) = new BZip2CompressorOutputStream(out)
+    override def wrapInput(in:InputStream):InputStream = new BZip2CompressorInputStream(in)
 
-    override def wrap(in:InputStream):InputStream = new BZip2CompressorInputStream(in)
+    override def wrapOutput(out:OutputStream, expandSize:Int):OutputStream = withOnClosing[BZip2CompressorOutputStream](new BZip2CompressorOutputStream(out), _.finish())
   }
 
 }

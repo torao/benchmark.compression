@@ -5,7 +5,7 @@ import java.io.{InputStream, OutputStream}
 import at.hazm.benchmark.compression.Compressor
 import org.xerial.snappy.{Snappy, SnappyInputStream, SnappyOutputStream}
 
-object SnappyJava extends Compressor.Block with Compressor.Stream[SnappyOutputStream] {
+object SnappyJava extends Compressor.Block with Compressor.Stream {
   val id:String = "org.xerial.snappy:snappy-java"
   override val version:String = "1.1.7.1"
 
@@ -17,9 +17,7 @@ object SnappyJava extends Compressor.Block with Compressor.Stream[SnappyOutputSt
     Snappy.uncompress(compressed, 0, length, uncompressed, 0)
   }
 
-  override def init(out:OutputStream, uncompressedSize:Int) = new SnappyOutputStream(out)
+  override def wrapInput(in:InputStream):InputStream = new SnappyInputStream(in)
 
-  override def finish(out:SnappyOutputStream):Unit = ()
-
-  override def wrap(in:InputStream):InputStream = new SnappyInputStream(in)
+  override def wrapOutput(out:OutputStream, expandSize:Int):OutputStream = new SnappyOutputStream(out)
 }

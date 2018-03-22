@@ -5,7 +5,7 @@ import java.io.{InputStream, OutputStream}
 import at.hazm.benchmark.compression.Compressor
 import com.github.luben.zstd.{Zstd, ZstdInputStream, ZstdOutputStream}
 
-case class ZStandard(level:Int) extends Compressor.Block with Compressor.Stream[ZstdOutputStream] {
+case class ZStandard(level:Int) extends Compressor.Block with Compressor.Stream {
   val id:String = s"com.github.luben:zstd-jni (level=$level)"
   override val version:String = "1.3.3-4"
 
@@ -25,10 +25,8 @@ case class ZStandard(level:Int) extends Compressor.Block with Compressor.Stream[
     len.toInt
   }
 
-  override def init(out:OutputStream, uncompressedSize:Int) = new ZstdOutputStream(out, level)
+  override def wrapInput(in:InputStream):InputStream = new ZstdInputStream(in)
 
   // ZStandard output stream MUST close
-  override def finish(out:ZstdOutputStream):Unit = out.close()
-
-  override def wrap(in:InputStream):InputStream = new ZstdInputStream(in)
+  override def wrapOutput(out:OutputStream, expandSize:Int):OutputStream = new ZstdOutputStream(out)
 }

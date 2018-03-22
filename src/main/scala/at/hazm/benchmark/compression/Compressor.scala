@@ -1,10 +1,13 @@
 package at.hazm.benchmark.compression
 
-import java.io.{InputStream, OutputStream}
+import java.io.{FilterOutputStream, InputStream, OutputStream}
 import java.util
 
 import scala.annotation.tailrec
 
+/**
+  * A trait that represents the compression algorithm implementations for the benchmark.
+  */
 sealed trait Compressor {
   val id:String
   val version:String = "Java " + System.getProperty("java.version")
@@ -32,17 +35,16 @@ object Compressor {
   /**
     * Stream compressor supply streaming compression/decompression by InputStream and OutputStream.
     */
-  trait Stream[O <: OutputStream] extends Compressor {
+  trait Stream extends Compressor {
     def compress(uncompressed:Array[Byte], out:OutputStream):Unit = {
-      val os = init(out, uncompressed.length)
+      val os = wrapOutput(out, uncompressed.length)
       os.write(uncompressed)
-      finish(os)
       os.close()
     }
 
-    def decompress(in:InputStream, uncompressedSize:Int):Array[Byte] = {
-      val is = wrap(in)
-      val buffer = new Array[Byte](uncompressedSize)
+    def decompress(in:InputStream, expectedUncompressSize:Int):Array[Byte] = {
+      val is = wrapInput(in)
+      val buffer = new Array[Byte](expectedUncompressSize)
 
       @tailrec
       def _read(pos:Int, length:Int):Int = {
@@ -51,14 +53,20 @@ object Compressor {
       }
 
       val filled = _read(0, 0)
+      is.close()
       if(filled != buffer.length) util.Arrays.copyOf(buffer, filled) else buffer
     }
 
-    protected def init(out:OutputStream, uncompressedSize:Int):O
+    protected def wrapInput(in:InputStream):InputStream
 
-    protected def finish(out:O):Unit = ()
+    protected def wrapOutput(out:OutputStream, expandSize:Int):OutputStream
 
-    protected def wrap(in:InputStream):InputStream = in
+    protected def withOnClosing[T <: OutputStream](out:T, onClosing:(T) => Unit):OutputStream = new FilterOutputStream(out) {
+      override def close():Unit = {
+        onClosing()
+        super.close()
+      }
+    }
   }
 
 }

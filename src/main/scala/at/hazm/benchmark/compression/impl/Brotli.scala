@@ -6,7 +6,7 @@ import at.hazm.benchmark.compression.Compressor
 import org.meteogroup.jbrotli.io.{BrotliInputStream, BrotliOutputStream}
 import org.meteogroup.jbrotli.{BrotliCompressor, BrotliDeCompressor, Brotli => B}
 
-object Brotli extends Compressor.Block with Compressor.Stream[BrotliOutputStream] {
+object Brotli extends Compressor.Block with Compressor.Stream {
   val id:String = "org.meteogroup.jbrotli:jbrotli"
   override val version:String = "0.5.0"
 
@@ -20,8 +20,8 @@ object Brotli extends Compressor.Block with Compressor.Stream[BrotliOutputStream
     decompressor.deCompress(compressed, 0, length, uncompressed, 0, uncompressed.length)
   }
 
-  override def init(out:OutputStream, uncompressedSize:Int) = new BrotliOutputStream(out)
+  override def wrapInput(in:InputStream):InputStream = new BrotliInputStream(in)
 
-  override def wrap(in:InputStream):InputStream = new BrotliInputStream(in)
+  override def wrapOutput(out:OutputStream, expandSize:Int):OutputStream = new BrotliOutputStream(out)
 
 }

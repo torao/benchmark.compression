@@ -5,7 +5,7 @@ import java.io.{InputStream, OutputStream}
 import at.hazm.benchmark.compression.Compressor
 import net.jpountz.lz4.{LZ4BlockInputStream, LZ4BlockOutputStream, LZ4Factory}
 
-object LZ4 extends Compressor.Block with Compressor.Stream[LZ4BlockOutputStream] {
+object LZ4 extends Compressor.Block with Compressor.Stream {
   val id:String = "org.lz4:lz4-java"
   override val version:String = "1.4.1"
 
@@ -21,9 +21,7 @@ object LZ4 extends Compressor.Block with Compressor.Stream[LZ4BlockOutputStream]
     decompressor.decompress(compressed, 0, uncompressed, 0, uncompressed.length)
   }
 
-  override def init(out:OutputStream, uncompressedSize:Int) = new LZ4BlockOutputStream(out)
+  override def wrapInput(in:InputStream):InputStream = new LZ4BlockInputStream(in)
 
-  override def finish(out:LZ4BlockOutputStream):Unit = out.finish()
-
-  override def wrap(in:InputStream):InputStream = new LZ4BlockInputStream(in)
+  override def wrapOutput(out:OutputStream, expandSize:Int):OutputStream = withOnClosing[LZ4BlockOutputStream](new LZ4BlockOutputStream(out), _.finish())
 }

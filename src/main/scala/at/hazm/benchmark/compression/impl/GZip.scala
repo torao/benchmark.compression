@@ -5,12 +5,10 @@ import java.util.zip.{GZIPInputStream, GZIPOutputStream}
 
 import at.hazm.benchmark.compression.Compressor
 
-object GZip extends Compressor.Stream[GZIPOutputStream] {
+object GZip extends Compressor.Stream {
   val id:String = "java:gzip"
 
-  override def init(out:OutputStream, uncompressedSize:Int) = new GZIPOutputStream(out)
+  override def wrapInput(in:InputStream):InputStream = new GZIPInputStream(in)
 
-  override def finish(out:GZIPOutputStream):Unit = out.finish()
-
-  override def wrap(in:InputStream):InputStream = new GZIPInputStream(in)
+  override def wrapOutput(out:OutputStream, expandSize:Int):OutputStream = withOnClosing[GZIPOutputStream](new GZIPOutputStream(out), _.finish())
 }

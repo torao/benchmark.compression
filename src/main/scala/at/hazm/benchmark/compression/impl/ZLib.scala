@@ -5,12 +5,10 @@ import java.util.zip.{DeflaterOutputStream, InflaterInputStream}
 
 import at.hazm.benchmark.compression.Compressor
 
-object ZLib extends Compressor.Stream[DeflaterOutputStream] {
+object ZLib extends Compressor.Stream {
   val id:String = "java:zlib"
 
-  override def init(out:OutputStream, uncompressedSize:Int) = new DeflaterOutputStream(out)
+  override def wrapInput(in:InputStream):InputStream = new InflaterInputStream(in)
 
-  override def finish(out:DeflaterOutputStream):Unit = out.finish()
-
-  override def wrap(in:InputStream):InputStream = new InflaterInputStream(in)
+  override def wrapOutput(out:OutputStream, expandSize:Int):OutputStream = withOnClosing[DeflaterOutputStream](new DeflaterOutputStream(out), _.finish())
 }
