@@ -29,7 +29,7 @@ object Main {
       System.getProperty("os.name").replaceAll("\\s+", "").toLowerCase + "_" +
       new SimpleDateFormat("yyyyMMdd").format(new Date()) + ".md"
     val out = new PrintWriter(new OutputStreamWriter(new FileOutputStream(fileName), StandardCharsets.UTF_8))
-    out.println("# JavaVM Compression Library Benchmark & Comparison")
+    out.println("# JavaVM Compression Libraries Benchmark & Comparison")
     out.println()
     out.println(DateFormat.getDateTimeInstance().format(new Date()))
     out.println(System.getProperty("user.name") + " @ " + InetAddress.getLocalHost.getHostName)
@@ -114,7 +114,7 @@ object Main {
          |
          |datasize=${buffer.length / 1024 / 1024}%,dMB, entropy=${entropy(buffer)}%s
          |
-         || Name | Version | Method | Rate | Compress [MB/sec] | Decompress [MB/sec] | ERR |
+         || Name | Version | Method | Rate | Compress [MB/sec] | Decompress [MB/sec] |     |
          ||:-----|:--------|:-------|-----:|------------------:|--------------------:|:----|
          |""".stripMargin)
     algorithms.foreach { cmp =>
@@ -272,9 +272,13 @@ object Main {
     def print(out:Appendable):Unit = {
       val ratePercent = rate match {
         case _ if rate == 0.0 || rate == 1.0 => f"${rate * 100}%.1f%%"
+        case _ if rate > 0.9999999 => f"${rate * 100}%.6f%%"
+        case _ if rate > 0.999999 => f"${rate * 100}%.5f%%"
         case _ if rate > 0.99999 => f"${rate * 100}%.4f%%"
         case _ if rate > 0.9999 => f"${rate * 100}%.3f%%"
         case _ if rate > 0.999 => f"${rate * 100}%.2f%%"
+        case _ if math.abs(rate) < 0.0001 => f"${rate * 100}%.5f%%"
+        case _ if math.abs(rate) < 0.001 => f"${rate * 100}%.4f%%"
         case _ if math.abs(rate) < 0.01 => f"${rate * 100}%.3f%%"
         case _ if math.abs(rate) < 0.10 => f"${rate * 100}%.2f%%"
         case _ => f"${rate * 100}%.1f%%"
@@ -284,7 +288,7 @@ object Main {
           ratePercent,
           f"${compress / 1024 / 1024.0}%,.1f",
           f"${decompress / 1024 / 1024.0}%,.1f",
-          error
+          if(error.isEmpty) "✔" else "✘" + error
         ).mkString("| ", " | ", " |\n")
       )
     }
