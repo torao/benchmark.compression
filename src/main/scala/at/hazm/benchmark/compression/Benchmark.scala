@@ -41,7 +41,7 @@ object Benchmark {
     * Array with all byte values zero.
     */
   object ZeroFilledByteArray extends Benchmark {
-    def title(sampleBinarySize:Int):String = f"Zero-filled `Byte[$sampleBinarySize%,d]` Array"
+    def title(sampleBinarySize:Int):String = f"Zero-filled `Byte[$sampleBinarySize%d]` Array"
 
     def newSample(sampleBinarySize:Int):Array[Byte] = new Array[Byte](sampleBinarySize)
 
@@ -52,7 +52,7 @@ object Benchmark {
     * Array with uniform-random 0x00 - 0xFF binary.
     */
   object UniformRandomByteArray extends Benchmark {
-    def title(sampleBinarySize:Int):String = f"Uniform Random filled `Byte[$sampleBinarySize%,d]` Array"
+    def title(sampleBinarySize:Int):String = f"Uniform Random filled `Byte[$sampleBinarySize%d]` Array"
 
     def newSample(sampleBinarySize:Int):Array[Byte] = {
       val random = new Array[Byte](sampleBinarySize)
@@ -67,7 +67,7 @@ object Benchmark {
     * INT32 array with gaussian-random binary.
     */
   case class GaussianRandomIntArray(mu:Int = 0, sigma2:Int = 1) extends Benchmark {
-    def title(sampleBinarySize:Int):String = f"Norm(μ=$mu%d,σ<sup>2</sup>=$sigma2%d) Random `Int[${sampleBinarySize / 4}%,d]` Array"
+    def title(sampleBinarySize:Int):String = f"Norm(μ=$mu%d,σ<sup>2</sup>=$sigma2%d) Random `Int[${sampleBinarySize / 4}%d]` Array"
 
     def newSample(sampleBinarySize:Int):Array[Byte] = {
       val sigma = math.sqrt(sigma2)
@@ -83,7 +83,7 @@ object Benchmark {
     * FLOAT64 array with gaussian-random binary.
     */
   case class GaussianRandomDoubleArray(mu:Int = 0, sigma2:Int = 1) extends Benchmark {
-    def title(sampleBinarySize:Int):String = f"Norm(μ=$mu%d,σ<sup>2</sup>=$sigma2%d) Random `Double[${sampleBinarySize / 8}%,d]` Array"
+    def title(sampleBinarySize:Int):String = f"Norm(μ=$mu%d,σ<sup>2</sup>=$sigma2%d) Random `Double[${sampleBinarySize / 8}%d]` Array"
 
     def newSample(sampleBinarySize:Int):Array[Byte] = {
       val sigma = math.sqrt(sigma2)
