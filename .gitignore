@@ -4,3 +4,4 @@ target/
 .idea/
 *.iml
 ~*
+machine-info.xml

@@ -10,6 +10,7 @@ import java.util.{Date, Properties, Timer, TimerTask}
 
 import at.hazm.benchmark.compression.Benchmark._
 import at.hazm.benchmark.compression.impl._
+;
 
 object Main {
 
@@ -25,9 +26,9 @@ object Main {
     RandomDoubleCSV, USDeclarationOfIndependenceText, JapaneseNovelKokoro
   )
 
-  val MeasurementTimeInMillis:Long = 10 * 1000
+  val MeasurementTimeInMillis:Long = 1 * 1000
 
-  val PreferredBinarySize:Int = 10 * 1024 * 1024
+  val PreferredBinarySize:Int = 1 * 1024 * 1024
 
   def main(args:Array[String]):Unit = {
 
@@ -98,7 +99,7 @@ object Main {
       flush()
       // run stream type compression benchmark
       cmp match {
-        case str:Compressor.Stream[_] => benchmark(sample, str, msec).print(out)
+        case str:Compressor.Stream => benchmark(sample, str:Compressor.Stream, msec).print(out)
         case _ =>
       }
       flush()
@@ -155,7 +156,7 @@ object Main {
     )
   }
 
-  private[this] def benchmark(uncompressed:Array[Byte], cmp:Compressor.Stream[_], msec:Long):Report = {
+  private[this] def benchmark(uncompressed:Array[Byte], cmp:Compressor.Stream, msec:Long):Report = {
     val expected = uncompressed.clone()
 
     // 圧縮の計測

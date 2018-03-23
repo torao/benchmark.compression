@@ -61,9 +61,9 @@ object Compressor {
 
     protected def wrapOutput(out:OutputStream, expandSize:Int):OutputStream
 
-    protected def withOnClosing[T <: OutputStream](out:T, onClosing:(T) => Unit):OutputStream = new FilterOutputStream(out) {
+    protected def withOnClosing[T <: OutputStream](os:T, onClosing:(T) => Unit):OutputStream = new FilterOutputStream(os) {
       override def close():Unit = {
-        onClosing()
+        onClosing(os)
         super.close()
       }
     }

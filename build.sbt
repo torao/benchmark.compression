@@ -15,5 +15,7 @@ libraryDependencies ++= Seq(
   "org.xerial.snappy" % "snappy-java" % "1.1.7.1",
   "com.github.luben" % "zstd-jni" % "1.3.3-4",
   "org.lz4" % "lz4-java" % "1.4.1",
-  "org.meteogroup.jbrotli" % "jbrotli" % "0.5.0"
+  // see http://dl.bintray.com/nitram509/jbrotli/org/meteogroup/jbrotli/jbrotli-native-win32-x86-amd64/0.5.0/
+  "org.meteogroup.jbrotli" % "jbrotli" % "0.5.0",
+  "org.meteogroup.jbrotli" % "jbrotli-native-win32-x86-amd64" % "0.5.0"
 )

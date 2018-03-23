@@ -17,7 +17,7 @@ object NOOP extends Compressor.Block with Compressor.Stream {
     compressed.length
   }
 
-  override def wrapInput(in:InputStream):InputStream = new FilterInputStream(in)
+  override def wrapInput(in:InputStream):InputStream = new FilterInputStream(in){/* to access protected constructor. */}
 
   override def wrapOutput(out:OutputStream, expandSize:Int):OutputStream = new FilterOutputStream(out)
 }
