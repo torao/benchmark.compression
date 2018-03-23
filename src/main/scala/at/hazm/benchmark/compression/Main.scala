@@ -10,15 +10,14 @@ import java.util.{Date, Properties, Timer, TimerTask}
 
 import at.hazm.benchmark.compression.Benchmark._
 import at.hazm.benchmark.compression.impl._
-;
 
 object Main {
 
   /** Compression algorithm implementations to benchmark. */
   val CompressionImpls = Seq(
-    NOOP, SnappyJava, LZ4,
+    NOOP,  SnappyJava, LZ4,
     ZStandard(1), ZStandard(3), ZStandard(6), ZStandard(9), ZStandard(16),
-    ZLib, GZip, ApacheCompress.BZIP2 /*, Brotli */)
+    ZLib, GZip, ApacheCompress.BZIP2, Brotli)
 
   /** ByteArray generator for benchmark. */
   val Benchmarks = Seq(
@@ -26,9 +25,10 @@ object Main {
     RandomDoubleCSV, USDeclarationOfIndependenceText, JapaneseNovelKokoro
   )
 
-  val MeasurementTimeInMillis:Long = 1 * 1000
+  /** Time of repeat to compress or expand a binary. */
+  val MeasurementTimeInMillis:Long = 10 * 1000
 
-  val PreferredBinarySize:Int = 1 * 1024 * 1024
+  val PreferredBinarySize:Int = 10 * 1024 * 1024
 
   def main(args:Array[String]):Unit = {
 
@@ -87,8 +87,8 @@ object Main {
     )
     out.append(s"## $title\n\n$info\n\n")
     out.append(
-      f"""|| Name | Version | Method | Rate | Compress <small>[MB/sec]</small> | Decompress <small>[MB/sec]</small> |     |
-         ||:-----|:--------|:-------|-----:|---------------------------------:|-----------------------------------:|:----|
+      f"""|| Name | Version | Method | Ratio | Compress <small>[MB/sec]</small> | Decompress <small>[MB/sec]</small> |     |
+         ||:-----|:--------|:-------|------:|---------------------------------:|-----------------------------------:|:----|
          |""".stripMargin)
     CompressionImpls.foreach { cmp =>
       // run block type compression benchmark

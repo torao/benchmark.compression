@@ -1,14 +1,14 @@
 package at.hazm.benchmark.compression.impl
 
-import java.io.{InputStream, OutputStream}
-
 import at.hazm.benchmark.compression.Compressor
-import org.meteogroup.jbrotli.io.{BrotliInputStream, BrotliOutputStream}
+import org.meteogroup.jbrotli.libloader.BrotliLibraryLoader
 import org.meteogroup.jbrotli.{BrotliCompressor, BrotliDeCompressor, Brotli => B}
 
-object Brotli extends Compressor.Block with Compressor.Stream {
+object Brotli extends Compressor.Block {
   val id:String = "org.meteogroup.jbrotli:jbrotli"
   override val version:String = "0.5.0"
+
+  BrotliLibraryLoader.loadBrotli()
 
   override def compress(uncompressed:Array[Byte], compressed:Array[Byte]):Int = {
     val compressor = new BrotliCompressor()
@@ -19,9 +19,5 @@ object Brotli extends Compressor.Block with Compressor.Stream {
     val decompressor = new BrotliDeCompressor()
     decompressor.deCompress(compressed, 0, length, uncompressed, 0, uncompressed.length)
   }
-
-  override def wrapInput(in:InputStream):InputStream = new BrotliInputStream(in)
-
-  override def wrapOutput(out:OutputStream, expandSize:Int):OutputStream = new BrotliOutputStream(out)
 
 }
