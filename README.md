@@ -11,7 +11,7 @@ In this benchmark, I consider [Snappy](https://github.com/google/snappy), [lz4](
 
 * [2018/03/22: Windows 10 (Core i7-7700)](benchmark/amd64_windows10_20180322.md)
 
-In above benchmark, the API that compresses from `byte[]` to `byte[]` and the API that uses `InputStream`/`OutputStream` are distinguished by **block** and **stream** respectively.
+In above benchmark result, the API that compresses from `byte[]` to `byte[]` and the API that uses `InputStream`/`OutputStream` are distinguished by **block** and **stream** respectively.
 
 The **java:*uncompress*** doesn't compress or expand binary, only copy between buffer and buffer with `System.arraycopy()`. This is logically the fastest algorithm running on its JavaVM, so this can be considered as pure overhead. The implementation that using JNI can be faster than this.
 
